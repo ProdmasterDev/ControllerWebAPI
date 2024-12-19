@@ -20,6 +20,8 @@ namespace ControllerWebAPI.Db
         public DbSet<Worker> Workers { get; set; }
         public DbSet<WorkerGroup> WorkerGroups { get; set; }
         public DbSet<AccessMethod> AccessMethods { get; set; }
+        public DbSet<WorkerAccessGroup> WorkerAccessGroup { get; set; }
+        public DbSet<WorkerGroupAccess> WorkerGroupAccess { get; set; }
         public ControllerAppContext(DbContextOptions<ControllerAppContext> options) : base(options)
         {
         }
@@ -109,6 +111,34 @@ namespace ControllerWebAPI.Db
                 .WithOne(x => x.Message)
                 .HasForeignKey(x => x.MessageId)
                 .HasPrincipalKey (x => x.Id);
+
+            modelBuilder
+                .Entity<Worker>()
+                .HasMany(w => w.WorkerAccessGroup) 
+                .WithOne(wag => wag.Worker)  
+                .HasForeignKey(wag => wag.WorkerId) 
+                .HasPrincipalKey(x => x.Id);
+
+            modelBuilder
+                .Entity<AccessGroup>()
+                .HasMany(ag => ag.WorkerAccessGroups)
+                .WithOne(wag => wag.AccessGroup)
+                .HasForeignKey(wag => wag.AccessGroupId)
+                .HasPrincipalKey(x => x.Id);
+
+            modelBuilder
+                .Entity<WorkerGroup>()
+                .HasMany(w => w.WorkerGroupAccess)
+                .WithOne(wag => wag.WorkerGroup)
+                .HasForeignKey(wag => wag.WorkerGroupId)
+                .HasPrincipalKey(x => x.Id);
+
+            modelBuilder
+                .Entity<AccessGroup>()
+                .HasMany(ag => ag.WorkerGroupAccess)
+                .WithOne(wag => wag.AccessGroup)
+                .HasForeignKey(wag => wag.AccessGroupId)
+                .HasPrincipalKey(x => x.Id);
         }
     }
 }

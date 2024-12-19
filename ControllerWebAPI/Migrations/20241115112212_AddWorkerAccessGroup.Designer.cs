@@ -3,6 +3,7 @@ using System;
 using ControllerWebAPI.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ControllerWebAPI.Migrations
 {
     [DbContext(typeof(ControllerAppContext))]
-    partial class ControllerAppContextModelSnapshot : ModelSnapshot
+    [Migration("20241115112212_AddWorkerAccessGroup")]
+    partial class AddWorkerAccessGroup
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -548,32 +551,6 @@ namespace ControllerWebAPI.Migrations
                     b.ToTable("WorkerGroups");
                 });
 
-            modelBuilder.Entity("ControllerDomain.Entities.WorkerGroupAccess", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AccessGroupId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("WorkerGroupId")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("isActive")
-                        .HasColumnType("boolean");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccessGroupId");
-
-                    b.HasIndex("WorkerGroupId");
-
-                    b.ToTable("WorkerGroupAccess");
-                });
-
             modelBuilder.Entity("ControllerDomain.Entities.Access", b =>
                 {
                     b.HasOne("ControllerDomain.Entities.ControllerLocation", "ControllerLocation")
@@ -750,32 +727,11 @@ namespace ControllerWebAPI.Migrations
                     b.Navigation("Worker");
                 });
 
-            modelBuilder.Entity("ControllerDomain.Entities.WorkerGroupAccess", b =>
-                {
-                    b.HasOne("ControllerDomain.Entities.AccessGroup", "AccessGroup")
-                        .WithMany("WorkerGroupAccess")
-                        .HasForeignKey("AccessGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ControllerDomain.Entities.WorkerGroup", "WorkerGroup")
-                        .WithMany("WorkerGroupAccess")
-                        .HasForeignKey("WorkerGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AccessGroup");
-
-                    b.Navigation("WorkerGroup");
-                });
-
             modelBuilder.Entity("ControllerDomain.Entities.AccessGroup", b =>
                 {
                     b.Navigation("Accesses");
 
                     b.Navigation("WorkerAccessGroups");
-
-                    b.Navigation("WorkerGroupAccess");
                 });
 
             modelBuilder.Entity("ControllerDomain.Entities.AccessMethod", b =>
@@ -825,8 +781,6 @@ namespace ControllerWebAPI.Migrations
             modelBuilder.Entity("ControllerDomain.Entities.WorkerGroup", b =>
                 {
                     b.Navigation("GroupAccess");
-
-                    b.Navigation("WorkerGroupAccess");
 
                     b.Navigation("Workers");
                 });

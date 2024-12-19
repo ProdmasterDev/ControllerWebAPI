@@ -42,7 +42,7 @@ namespace ControllerWebAPI.Operations
                 return serverMessage;
             }
 
-            serverMessage.Cards
+            //serverMessage.Cards();
 
             var cards = await _dbContext
                 .Set<Message>()

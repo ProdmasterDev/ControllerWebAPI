@@ -15,5 +15,6 @@ namespace ControllerDomain.Entities
         public string Name { get; set; } = string.Empty;
         public virtual IEnumerable<GroupAccess> GroupAccess { get; set; } = new List<GroupAccess>();
         public virtual IEnumerable<Worker> Workers { get; set; } = new List<Worker>();
+        public virtual IEnumerable<WorkerGroupAccess> WorkerGroupAccess { get; set; } = new List<WorkerGroupAccess>();
     }
 }

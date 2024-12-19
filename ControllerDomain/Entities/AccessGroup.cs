@@ -14,5 +14,7 @@ namespace ControllerDomain.Entities
         public bool Arch { get; set; } = false;
         public string Name { get; set; } = string.Empty;
         public virtual IEnumerable<AccessGroupAccess> Accesses { get; set; } = new List<AccessGroupAccess>();
+        public virtual IEnumerable<WorkerAccessGroup> WorkerAccessGroups { get; set; } = new List<WorkerAccessGroup>();
+        public virtual IEnumerable<WorkerGroupAccess> WorkerGroupAccess { get; set; } = new List<WorkerGroupAccess>();
     }
 }

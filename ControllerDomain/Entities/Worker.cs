@@ -27,6 +27,7 @@ namespace ControllerDomain.Entities
         public virtual IEnumerable<Access> Accesses { get; set; } = new List<Access>();
         public virtual WorkerGroup? Group { get; set; }
         public virtual AccessMethod? AccessMethod { get; set; }
+        public virtual IEnumerable<WorkerAccessGroup> WorkerAccessGroup { get; set; } = new List<WorkerAccessGroup>();
         public virtual IEnumerable<Event> Events { get; set; } = new List<Event>();
     }
 }
