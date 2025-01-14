@@ -3,6 +3,7 @@ using ControllerWebAPI.Db;
 using ControllerWebAPI.Dto;
 using ControllerWebAPI.Requests;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
 
 namespace ControllerWebAPI.Operations
 {
@@ -42,17 +43,37 @@ namespace ControllerWebAPI.Operations
                 return serverMessage;
             }
 
-            //serverMessage.Cards();
+            //serverMessage.Cards(); 
 
             var cards = await _dbContext
                 .Set<Message>()
-                .Where(x => !x.IsComplited)
-                .Include(x => x.Cards
-                    .Where(x => !x.IsLoaded))
-                .SelectMany(x => x.Cards)
+                .Where(x => !x.IsComplited && x.Id == mes.Id)
+                .Include(x => x.Cards)
+                    .ThenInclude(x => x.Card)
+                .SelectMany(x => x.Cards.Where(c => !c.IsLoaded))
                 .Take(10)
                 .ToListAsync() ;
-            return null;
+            if (cards.Count == 0)
+            {
+                mes.IsComplited = true;
+                _dbContext.Update(mes);
+                await _dbContext.SaveChangesAsync();
+                return null;
+            }
+            foreach (var card in cards)
+            {
+                serverMessage.Cards.Add(new Dto.Card
+                {
+                    Name = card.Card.CardNumb16,
+                    Flags = 0,
+                    Tz = 255
+                });
+                card.IsLoaded = true;
+                _dbContext.Update(card);
+            }
+            serverMessage.Operation = mes.Operation.OperationCode;
+            await _dbContext.SaveChangesAsync();
+            return serverMessage;
         }
     }
 }
